@@ -1,0 +1,65 @@
+WEBVTT
+
+1
+00:00:00.350 --> 00:00:04.090
+Here's how to install the ChatGPT app on Windows,
+
+2
+00:00:03.910 --> 00:00:07.130
+and connect it to a server over SSH.
+
+3
+00:00:08.080 --> 00:00:12.380
+Open the Microsoft Store and search for ChatGPT.
+
+4
+00:00:13.430 --> 00:00:16.450
+Pick the app published by OpenAI,
+
+5
+00:00:16.230 --> 00:00:18.050
+then click Get.
+
+6
+00:00:20.100 --> 00:00:23.760
+When it's installed, click Open and log in.
+
+7
+00:00:25.910 --> 00:00:31.410
+Then open Settings, Connections, and the SSH tab.
+
+8
+00:00:31.190 --> 00:00:32.850
+Switch on your server.
+
+9
+00:00:35.300 --> 00:00:40.160
+If it fails, ask Codex in a chat to fix passwordless login.
+
+10
+00:00:40.420 --> 00:00:42.880
+Run the command it gives you on the server,
+
+11
+00:00:42.700 --> 00:00:44.320
+then type done.
+
+12
+00:00:46.970 --> 00:00:49.830
+If Codex isn't installed on the server,
+
+13
+00:00:49.610 --> 00:00:51.830
+ask it to install it there too.
+
+14
+00:00:54.880 --> 00:01:00.220
+Back in Settings, click Reconnect, and wait until it says Connected.
+
+15
+00:01:01.670 --> 00:01:04.050
+Pick a project folder on the server,
+
+16
+00:01:03.870 --> 00:01:05.730
+and you're ready to go.

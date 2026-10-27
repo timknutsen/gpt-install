@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT on Windows over SSH</title>
+<meta name="description" content="Install the ChatGPT desktop app on Windows and connect it to a server over SSH, with Codex fixing the connection for you. Video and written steps.">
+<meta property="og:title" content="ChatGPT on Windows over SSH">
+<meta property="og:description" content="Install the ChatGPT app on Windows and connect it to a server over SSH. One-minute video and written steps.">
+<meta property="og:image" content="https://timknutsen.no/gpt-install/media/poster.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+  :root {
+    --bg: #f7f7f5; --surface: #ffffff; --ink: #1a1a1a; --muted: #5f6368; --line: #e3e3e0;
+    --accent: #0067c0; --accent-soft: #e6f0fa; --warn: #b3261e; --warn-soft: #fbeceb; --ok: #108c46;
+    --code-bg: #f1f1ee; --code-ink: #7a3e00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121315; --surface: #1b1c1f; --ink: #ececec; --muted: #a2a6ad; --line: #2e3035;
+      --accent: #6cb0f5; --accent-soft: #1b2a3b; --warn: #f2958c; --warn-soft: #3a1f1d; --ok: #5fd08f;
+      --code-bg: #23252a; --code-ink: #f5c46b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121315; --surface: #1b1c1f; --ink: #ececec; --muted: #a2a6ad; --line: #2e3035;
+    --accent: #6cb0f5; --accent-soft: #1b2a3b; --warn: #f2958c; --warn-soft: #3a1f1d; --ok: #5fd08f;
+    --code-bg: #23252a; --code-ink: #f5c46b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 Inter, system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 80px; }
+  .back { font-size: 15px; color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.15; margin: 18px 0 10px; letter-spacing: -0.02em; }
+  .lede { color: var(--muted); font-size: 19px; margin: 0 0 28px; }
+  video { width: 100%; border-radius: 14px; background: #000; display: block; box-shadow: 0 12px 40px rgba(0,0,0,.18); }
+  .meta { color: var(--muted); font-size: 14px; margin: 10px 2px 0; }
+  h2 { font-size: 24px; margin: 52px 0 12px; letter-spacing: -0.01em; }
+  h3 { font-size: 19px; margin: 0 0 6px; }
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+  ol.steps > li { counter-increment: s; position: relative; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; padding: 18px 20px 18px 68px; margin: 0 0 14px; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 20px; top: 18px; width: 32px; height: 32px; border-radius: 16px;
+    background: #ff8c00; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  ol.steps p, ol.steps ul { margin: 6px 0; }
+  .ui { font-weight: 600; }
+  .no { color: var(--muted); font-weight: 400; }
+  code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.88em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; }
+  pre { background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 10px 0;
+    font: 14.5px/1.6 "JetBrains Mono", ui-monospace, monospace; }
+  pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+  .note { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 12px 16px; border-radius: 0 10px 10px 0; margin: 12px 0; }
+  .warn { border-left-color: var(--warn); background: var(--warn-soft); }
+  .prompt { display: inline-block; background: var(--accent-soft); border-radius: 16px; padding: 6px 14px; font-style: italic; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; background: var(--surface); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 18px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="https://timknutsen.no/">← timknutsen.no</a>
+  <h1>ChatGPT on Windows, connected to a server over SSH</h1>
+  <p class="lede">Install the ChatGPT desktop app, switch on an SSH host, and let Codex fix the connection when it fails. About a minute of video, then the same steps in writing.</p>
+
+  <video controls preload="metadata" poster="media/poster.jpg" playsinline>
+    <source src="media/chatgpt-windows-ssh.mp4" type="video/mp4">
+    <track kind="captions" src="media/captions.en.vtt" srclang="en" label="English" default>
+    Your browser can't play this video. <a href="media/chatgpt-windows-ssh.mp4">Download it (MP4, 9 MB)</a>.
+  </video>
+  <p class="meta">67 seconds · Windows 10 and 11 · screens are simplified illustrations; labels may differ in your app version.</p>
+
+  <h2>Before you start</h2>
+  <ul>
+    <li>A Windows 10 or 11 PC and a ChatGPT account.</li>
+    <li>A Linux server you can already log in to with a password from a terminal.</li>
+    <li>The server listed as a host in your SSH config file, <code>C:\Users\&lt;you&gt;\.ssh\config</code>, for example:</li>
+  </ul>
+<pre><code>Host devbox
+    HostName server.example.com
+    User yourname</code></pre>
+  <p>The app shows Norwegian labels if Windows is set to Norwegian. They are given in grey below.</p>
+
+  <h2>Steps</h2>
+  <ol class="steps">
+    <li>
+      <h3>Install the app from the Microsoft Store</h3>
+      <p>Open the Microsoft Store, search for <b>ChatGPT</b>, and pick the app whose publisher is <b>OpenAI</b>. Skip the look-alikes. Click <span class="ui">Get</span>.</p>
+    </li>
+    <li>
+      <h3>Open the app and log in</h3>
+      <p>Click <span class="ui">Open</span>, then <span class="ui">Log in</span>. Sign-in finishes in your browser.</p>
+    </li>
+    <li>
+      <h3>Switch on your server</h3>
+      <p>Open <span class="ui">Settings</span> › <span class="ui">Connections</span> <span class="no">(Tilkoblinger)</span> › <span class="ui">SSH</span>. Under <span class="ui">SSH connections from this PC</span> <span class="no">(SSH-tilkoblinger fra denne PC-en)</span>, switch on your host. If it isn't listed, click <span class="ui">Add</span> <span class="no">(Legg til)</span>.</p>
+      <p>The first attempt often fails with <span class="ui">Error · SSH connection failed</span> <span class="no">(Feil · SSH-tilkobling mislyktes)</span>. Hover the ⓘ icon to see why; <code>Host key verification failed</code> is typical when the PC has never logged in to that server with a key.</p>
+    </li>
+    <li>
+      <h3>Ask Codex to fix passwordless login</h3>
+      <p>Start a new chat on this PC and ask:</p>
+      <p><span class="prompt">Fix passwordless SSH login to devbox</span></p>
+      <p>Codex checks your SSH setup, creates a key if the PC has none, and gives you a short command to add the key on the server. Run that command in a terminal where you are logged in to the server, then type <code>done</code> in the chat. Codex tests the login.</p>
+      <div class="note warn"><b>Never type the server password in the chat.</b> Type it only in your own terminal window.</div>
+    </li>
+    <li>
+      <h3>Ask Codex to install Codex CLI on the server</h3>
+      <p>If the host then shows <span class="ui">Codex CLI is not installed on this remote machine</span> <span class="no">(Codex CLI er ikke installert på denne eksterne maskinen)</span>, ask in the same chat:</p>
+      <p><span class="prompt">Codex CLI isn't installed on devbox. Install it over SSH now.</span></p>
+    </li>
+    <li>
+      <h3>Reconnect and pick a folder</h3>
+      <p>Back in <span class="ui">Settings › Connections › SSH</span>, click <span class="ui">Reconnect</span> <span class="no">(Koble til på nytt)</span>. If Codex asks you to sign in on the server, complete it. When the host says <span class="ui">Connected</span> <span class="no">(Tilkoblet)</span>, click the folder icon on the host row and open a project folder on the server. Chats in that project now run on the server.</p>
+    </li>
+  </ol>
+
+  <h2>Doing steps 4 and 5 by hand</h2>
+  <p>If you'd rather not let Codex do it, the same fixes take three commands in PowerShell on the PC. Replace <code>devbox</code> with your host alias.</p>
+<pre><code># 1. Accept the server's host key (answer "yes" once, then log out)
+ssh devbox
+
+# 2. Create a key and copy it to the server (asks for the server password once)
+ssh-keygen -t ed25519
+type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh devbox "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+
+# 3. Check that login no longer asks for a password, and that Codex is found
+ssh devbox "bash -lc 'which codex'"</code></pre>
+  <p>If <code>which codex</code> prints nothing, install Codex CLI on the server (it needs Node.js) and sign in once:</p>
+<pre><code>npm install -g @openai/codex
+codex</code></pre>
+  <p>The app starts Codex through the server's login shell, so <code>codex</code> must be on the <code>PATH</code> there.</p>
+
+  <h2>Troubleshooting</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Status in the app</th><th>What it means</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Error · SSH connection failed, <i>Host key verification failed</i></td><td>The PC doesn't trust the server yet, or has no key it accepts.</td><td>Step 4, or <code>ssh devbox</code> once and answer <code>yes</code>.</td></tr>
+      <tr><td>Connecting · Codex CLI is not installed on this remote machine</td><td>SSH works, but <code>codex</code> isn't on the server's login <code>PATH</code>.</td><td>Step 5, or install it by hand.</td></tr>
+      <tr><td>Connected, but chats fail</td><td>Codex on the server isn't signed in.</td><td>Click Reconnect and complete the sign-in, or run <code>codex</code> on the server once.</td></tr>
+      <tr><td>The host isn't listed</td><td>It isn't in your SSH config file.</td><td>Add a <code>Host</code> entry, or use <span class="ui">Add</span>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <footer>
+    Made by <a href="https://timknutsen.no/">Tim Knutsen</a>, October 2026. Based on a real setup on Windows 11; host names in the video are placeholders.
+    Official docs: <a href="https://learn.chatgpt.com/docs/remote-connections">OpenAI: Remote connections</a>.
+  </footer>
+</main>
+</body>
+</html>
