@@ -25,41 +25,57 @@ then click Get.
 When it's installed, click Open and log in.
 
 7
-00:00:25.910 --> 00:00:31.410
-Then open Settings, Connections, and the SSH tab.
+00:00:25.910 --> 00:00:30.050
+Then open Settings, and Connections under Coding.
 
 8
-00:00:31.190 --> 00:00:32.850
-Switch on your server.
+00:00:30.230 --> 00:00:33.490
+Click Add, type the server's address,
 
 9
-00:00:35.300 --> 00:00:40.160
-If it fails, ask Codex in a chat to fix passwordless login.
+00:00:33.270 --> 00:00:35.810
+give it a short alias, and save.
 
 10
-00:00:40.420 --> 00:00:42.880
-Run the command it gives you on the server,
+00:00:37.260 --> 00:00:41.160
+Switch it on. The first try usually fails,
 
 11
-00:00:42.700 --> 00:00:44.320
-then type done.
+00:00:40.940 --> 00:00:44.120
+because passwordless login isn't set up yet.
 
 12
-00:00:46.970 --> 00:00:49.830
-If Codex isn't installed on the server,
+00:00:45.370 --> 00:00:52.150
+Open a new local chat, and ask Codex to fix passwordless login and give you the script to run.
 
 13
-00:00:49.610 --> 00:00:51.830
-ask it to install it there too.
+00:00:55.000 --> 00:00:59.220
+In a separate terminal, log in to the server with your password,
 
 14
-00:00:54.880 --> 00:01:00.220
-Back in Settings, click Reconnect, and wait until it says Connected.
+00:00:59.000 --> 00:01:02.580
+run the script, then type done in the chat.
 
 15
-00:01:01.670 --> 00:01:04.050
-Pick a project folder on the server,
+00:01:04.230 --> 00:01:07.090
+If Codex isn't installed on the server,
 
 16
-00:01:03.870 --> 00:01:05.730
+00:01:06.870 --> 00:01:09.090
+ask it to install it there too.
+
+17
+00:01:12.140 --> 00:01:17.240
+Back in Settings, click Reconnect. When you're asked to sign in,
+
+18
+00:01:17.020 --> 00:01:21.080
+use your work email, and wait until it says Connected.
+
+19
+00:01:22.330 --> 00:01:24.710
+Pick a project folder on the server,
+
+20
+00:01:24.530 --> 00:01:26.390
 and you're ready to go.

@@ -66,24 +66,21 @@
 <main>
   <a class="back" href="https://timknutsen.no/">← timknutsen.no</a>
   <h1>ChatGPT on Windows, connected to a server over SSH</h1>
-  <p class="lede">Install the ChatGPT desktop app, switch on an SSH host, and let Codex fix the connection when it fails. About a minute of video, then the same steps in writing.</p>
+  <p class="lede">Install the ChatGPT desktop app, switch on an SSH host, and let Codex fix the connection when it fails. About a minute and a half of video, then the same steps in writing.</p>
 
   <video controls preload="metadata" poster="media/poster.jpg" playsinline>
     <source src="media/chatgpt-windows-ssh.mp4" type="video/mp4">
     <track kind="captions" src="media/captions.en.vtt" srclang="en" label="English">
-    Your browser can't play this video. <a href="media/chatgpt-windows-ssh.mp4">Download it (MP4, 9 MB)</a>.
+    Your browser can't play this video. <a href="media/chatgpt-windows-ssh.mp4">Download it (MP4, 11 MB)</a>.
   </video>
-  <p class="meta">67 seconds · Windows 10 and 11 · screens are simplified illustrations; labels may differ in your app version.</p>
+  <p class="meta">88 seconds · Windows 10 and 11 · screens are simplified illustrations; labels may differ in your app version.</p>
 
   <h2>Before you start</h2>
   <ul>
     <li>A Windows 10 or 11 PC and a ChatGPT account.</li>
-    <li>A Linux server you can already log in to with a password from a terminal.</li>
-    <li>The server listed as a host in your SSH config file, <code>C:\Users\&lt;you&gt;\.ssh\config</code>, for example:</li>
+    <li>A Linux server you can already log in to with a password from a terminal, and its full address, for example <code>devbox.example.com</code>.</li>
+    <li>The email you use for ChatGPT at work. You sign in with it again on the server.</li>
   </ul>
-<pre><code>Host devbox
-    HostName server.example.com
-    User yourname</code></pre>
   <p>The app shows Norwegian labels if Windows is set to Norwegian. They are given in grey below.</p>
 
   <h2>Steps</h2>
@@ -97,29 +94,37 @@
       <p>Click <span class="ui">Open</span>, then <span class="ui">Log in</span>. Sign-in finishes in your browser.</p>
     </li>
     <li>
-      <h3>Switch on your server</h3>
-      <p>Open <span class="ui">Settings</span> › <span class="ui">Connections</span> <span class="no">(Tilkoblinger)</span> › <span class="ui">SSH</span>. Under <span class="ui">SSH connections from this PC</span> <span class="no">(SSH-tilkoblinger fra denne PC-en)</span>, switch on your host. If it isn't listed, click <span class="ui">Add</span> <span class="no">(Legg til)</span>.</p>
-      <p>The first attempt often fails with <span class="ui">Error · SSH connection failed</span> <span class="no">(Feil · SSH-tilkobling mislyktes)</span>. Hover the ⓘ icon to see why; <code>Host key verification failed</code> is typical when the PC has never logged in to that server with a key.</p>
+      <h3>Add your server and switch it on</h3>
+      <p>Open <span class="ui">Settings</span>. Under the <span class="ui">Coding</span> <span class="no">(Koding)</span> group, open <span class="ui">Connections</span> <span class="no">(Tilkoblinger)</span>, then the <span class="ui">SSH</span> tab.</p>
+      <p>Click <span class="ui">Add</span> <span class="no">(Legg til)</span>. Type the server's full address in the top field, give it a short <span class="ui">Alias</span>, and click <span class="ui">Save</span> <span class="no">(Lagre)</span>. Then switch the host on.</p>
+      <p>The first try usually fails with <span class="ui">Error · SSH connection failed</span> <span class="no">(Feil · SSH-tilkobling mislyktes)</span>, because passwordless login isn't set up yet. Hover the ⓘ icon to see the reason, typically <code>Host key verification failed</code>.</p>
     </li>
     <li>
-      <h3>Ask Codex to fix passwordless login</h3>
-      <p>Start a new chat on this PC and ask:</p>
-      <p><span class="prompt">Fix passwordless SSH login to devbox</span></p>
-      <p>Codex checks your SSH setup, creates a key if the PC has none, and gives you a short command to add the key on the server. Run that command in a terminal where you are logged in to the server, then type <code>done</code> in the chat. Codex tests the login.</p>
+      <h3>Ask a local chat to fix passwordless login</h3>
+      <p>Start a <b>new chat on this PC</b> (not on the server) and ask:</p>
+      <p><span class="prompt">Fix passwordless SSH login to devbox and give me the script to run on the server</span></p>
+      <p>Codex checks your SSH setup, creates a key if the PC has none, and gives you a short Bash script that adds the key on the server.</p>
+    </li>
+    <li>
+      <h3>Run the script in a separate terminal</h3>
+      <p>Open a separate PowerShell window and log in to the server with your password:</p>
+<pre><code>ssh you@devbox.example.com</code></pre>
+      <p>Paste and run the script there. Then go back to the chat and type <code>done</code>. Codex tests the login again and confirms that it works without a password.</p>
       <div class="note warn"><b>Never type the server password in the chat.</b> Type it only in your own terminal window.</div>
     </li>
     <li>
-      <h3>Ask Codex to install Codex CLI on the server</h3>
+      <h3>Install Codex CLI on the server</h3>
       <p>If the host then shows <span class="ui">Codex CLI is not installed on this remote machine</span> <span class="no">(Codex CLI er ikke installert på denne eksterne maskinen)</span>, ask in the same chat:</p>
       <p><span class="prompt">Codex CLI isn't installed on devbox. Install it over SSH now.</span></p>
     </li>
     <li>
-      <h3>Reconnect and pick a folder</h3>
-      <p>Back in <span class="ui">Settings › Connections › SSH</span>, click <span class="ui">Reconnect</span> <span class="no">(Koble til på nytt)</span>. If Codex asks you to sign in on the server, complete it. When the host says <span class="ui">Connected</span> <span class="no">(Tilkoblet)</span>, click the folder icon on the host row and open a project folder on the server. Chats in that project now run on the server.</p>
+      <h3>Reconnect, sign in, and pick a folder</h3>
+      <p>Back in <span class="ui">Settings › Connections › SSH</span>, click <span class="ui">Reconnect</span> <span class="no">(Koble til på nytt)</span>. Codex on the server isn't signed in yet, so you're asked to sign in: use your work email. Wait until the host says <span class="ui">Connected</span> <span class="no">(Tilkoblet)</span>.</p>
+      <p>Click the folder icon on the host row and open a project folder on the server. Chats in that project now run on the server.</p>
     </li>
   </ol>
 
-  <h2>Doing steps 4 and 5 by hand</h2>
+  <h2>Doing steps 4 to 6 by hand</h2>
   <p>If you'd rather not let Codex do it, the same fixes take three commands in PowerShell on the PC. Replace <code>devbox</code> with your host alias.</p>
 <pre><code># 1. Accept the server's host key (answer "yes" once, then log out)
 ssh devbox
@@ -140,10 +145,10 @@ codex</code></pre>
   <table>
     <thead><tr><th>Status in the app</th><th>What it means</th><th>Fix</th></tr></thead>
     <tbody>
-      <tr><td>Error · SSH connection failed, <i>Host key verification failed</i></td><td>The PC doesn't trust the server yet, or has no key it accepts.</td><td>Step 4, or <code>ssh devbox</code> once and answer <code>yes</code>.</td></tr>
-      <tr><td>Connecting · Codex CLI is not installed on this remote machine</td><td>SSH works, but <code>codex</code> isn't on the server's login <code>PATH</code>.</td><td>Step 5, or install it by hand.</td></tr>
-      <tr><td>Connected, but chats fail</td><td>Codex on the server isn't signed in.</td><td>Click Reconnect and complete the sign-in, or run <code>codex</code> on the server once.</td></tr>
-      <tr><td>The host isn't listed</td><td>It isn't in your SSH config file.</td><td>Add a <code>Host</code> entry, or use <span class="ui">Add</span>.</td></tr>
+      <tr><td>Error · SSH connection failed, <i>Host key verification failed</i></td><td>The PC doesn't trust the server yet, or has no key it accepts.</td><td>Steps 4 and 5, or <code>ssh devbox</code> once and answer <code>yes</code>.</td></tr>
+      <tr><td>Connecting · Codex CLI is not installed on this remote machine</td><td>SSH works, but <code>codex</code> isn't on the server's login <code>PATH</code>.</td><td>Step 6, or install it by hand.</td></tr>
+      <tr><td>Connected, but chats fail</td><td>Codex on the server isn't signed in.</td><td>Click Reconnect and sign in with your work email, or run <code>codex</code> on the server once.</td></tr>
+      <tr><td>The host isn't listed</td><td>It hasn't been added yet.</td><td>Step 3: <span class="ui">Add</span>, then address and alias.</td></tr>
     </tbody>
   </table>
   </div>
